@@ -3,10 +3,8 @@ const mongoose = require("mongoose");  // MONGOOSE
 
 const PinSchema = new mongoose.Schema(   // SCHEMA
     {
-      username: {
-        type: String,
-        required: true,
-      }}
+      user: String
+    }
       )
 
 const app = express() // APP CREATED
@@ -20,24 +18,29 @@ mongoose
  .catch(err => console.log(err));
 
 
- const Pin =  mongoose.model("Pin", PinSchema); // MODEL IS BEING MADE OUT OF SCHEMA
+ const Pin =  mongoose.model("Devimp", PinSchema); // MODEL IS BEING MADE OUT OF SCHEMA
 
+//  can not name a collection as "PIN" 
 
 
 app.get("/", (req, res) => {  // APPP IS WORKING IN GET
     res.status(200).send("hello world");
   });   
 
-app.post("/", (req, res) => {  // APP IS WORKING IN "POST" + THE SCHEMA IS BIENG USED AS WE ARE ABLE TO CREATE A THING .
-    const newPin = new Pin(req.body);
-    try {
-        res.status(200).json(newPin);
-        console.log(newPin);
-    } catch (err) {
-      res.status(500).json(err);
-      console.log(err)
-    }
-});
+  app.post("/addname", (req, res) => {
+    var myData = new Pin(req.body);
+    console.log(myData)
+  
+    myData.save()
+    .then(item => {
+      console.log(myData);
+    res.send("item saved to database");
+    })
+    .catch(err => {
+    res.status(400).send("unable to save to database");
+    });
+  }
+  )  
 
 app.listen(3000,()=>{ // THE APP IS WORKING ON 3000 PORT
     console.log("listening http://localhost:3000/")
